@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
+const PORT = 3000
+
+require('./db/db');
 
 
 
-
-app.listen(9000, () => {
-    console.log('port 9000 on')
+app.listen(PORT, (err) => {
+    console.log(err || `server listening on ${PORT}`)
 })
