@@ -5,22 +5,20 @@ const bcrypt  = require('bcryptjs')
 
 router.post('/login', async (req,res)=>{
     try{
-
+        // console.log(req.body)
         const foundUser = await User.findOne({username: req.body.username});
-        console.log(foundUser, '<--- foundUser');
+        // console.log(foundUser, '<--- foundUser');
 
         if(foundUser){
             if(bcrypt.compareSync(req.body.password, foundUser.password)){
                 req.session.userId = foundUser._id;
                 req.session.username = foundUser.username;
                 req.session.logged = true;
+                console.log(req.session)
+                res.json({foundUser})
 
-                res.redirect('/auth')
             }else {
-
                 req.session.message = 'Username or Password incorrect';
-                res.redirect('/');
-          
             }
 
         }else{
@@ -41,19 +39,18 @@ router.post('/register', async (req,res) =>{
     const password = req.body.password;
 
     const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    console.log(hashedPassword)
+    // console.log(hashedPassword)
     req.body.password = hashedPassword;
 
     try{
-
+        // console.log(req.body)
         const createdUser = await User.create(req.body);
-        console.log(createdUser, '<--- created user');
-
+        // console.log(createdUser, '<--- created user');
         req.session.userId = createdUser._id;
         req.session.username = createdUser.username;
         req.session.logged = true;
 
-        res.redirect('/auth')
+        res.json({data})
 
     }catch(err){
 
@@ -62,6 +59,18 @@ router.post('/register', async (req,res) =>{
 
     }
 })
+
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if(err){
+        res.send(err);
+      } else {
+        console.log(req.session, '<--- logged out')
+        res.json({"isLogged": true});
+      }
+    })
+  
+  })
 
 
 module.exports = router;

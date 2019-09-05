@@ -1,10 +1,10 @@
 const express = require('express');
-const app = express();
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 
 
+const app = express();
 
 const PORT = 3000
 
@@ -18,15 +18,23 @@ require('dotenv').config()
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(express.json())
 app.use(session({
     secret: 'muckduck',
     resave: false,
     saveUninitialized: false
 }));
 
+//WHEN DEPLOYED, ADD YOUR DEPLOYED URL ADDRESS TO ORIGIN ARRAY
+const corsOptions = {
+    origin: ['http://localhost:3001'],
+    credentials: true,
+    optionsSuccessStatus: 200
+}
 
+// app.use(cors());
+app.use(cors(corsOptions))
 
-app.use(cors());
 
 app.use('/cocktail', cocktailRouter)
 app.use('/auth', authRouter)
