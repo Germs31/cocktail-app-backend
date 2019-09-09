@@ -12,7 +12,6 @@ router.get('/allGlasses', async (req,res)=>{
         }
     })
     const parsed = await allCocktailGlasses.json()
-    console.log(parsed, '<--- glasses')
     res.json({glasses: parsed.drinks, success: true, message: "api cocktail glasses"})
     }catch(err){
         console.log(err)
@@ -29,12 +28,10 @@ router.get('/allIngredients', async(req,res)=>{
     try{
     const allCocktailIngredients = await fetch('https://the-cocktail-db.p.rapidapi.com/list.php?i=list',{
         headers:{
-            "x-rapidapi-key":process.env.API_KEY
+            "x-rapidapi-key": process.env.API_KEY
         }
     })
-
     const parsed = await allCocktailIngredients.json()
-    console.log(parsed, '<--- ingredients')
     res.json({ingredients: parsed.drinks, success: true, message: "api cocktail ingredients"})
 
     }catch(err){
@@ -58,8 +55,28 @@ router.get('/allCatagories', async(req,res)=>{
     })
 
     const parsed = await allCocktailCatagories.json()
-    console.log(parsed, '<--- catagories')
     res.json({catagories: parsed.drinks, success: true, message: "api cocktail catagories"})
+
+    }catch(err){
+        console.log(err)
+        res.json({
+            success:false,
+            message: "something went wrong"
+        }) 
+    }
+})
+
+//random drink
+router.get('/randomDrink', async(req,res) =>{
+    try{
+        const randomCocktail = await fetch('https://the-cocktail-db.p.rapidapi.com/random.php',{
+        headers:{
+            "x-rapidapi-key":process.env.API_KEY
+        }
+    })
+
+    const parsed = await randomCocktail.json()
+    res.json({random: parsed.drinks, success: true, message: "api cocktail random"})
 
     }catch(err){
         console.log(err)
